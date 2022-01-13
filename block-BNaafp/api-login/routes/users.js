@@ -17,4 +17,23 @@ router.post('/register', async (req, res, next) => {
   }
 })
 
+router.post('/login', async (req, res, next) => {
+  var { email, password } = req.body;
+  if(!email || !password) {
+    return res.status(400).json({ error: "Email/Password required" });
+  }
+  try {
+    var user = await User.findOne({ email });
+    if(!user) {
+      return res.status(400).res.json({ error: "Email not registered" });
+    }
+    var result = await user.verifyPassword(password);
+    if(!result) {
+      return res.status(400).json({ error: "password is incorrect" });
+    }
+  } catch (error) {
+    
+  }
+})
+
 module.exports = router;
